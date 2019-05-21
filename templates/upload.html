@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Upload</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <style type="text/css">
+            #cfsubmit { background: #892525; border-radius: 3px; color: #fff; padding: 3px 7px;}
+            #cfsubmit { background: #892525; border-radius: 3px; color: #fff; padding: 3px 7px;}
+        </style>
+</head> 
+   <body>
+      <div class="raj">
+       <P><h1> <b>Upload the image: </b></h1></br> </br>
+        <div class="formblock" style="opacity: 1;">
+
+		<form action="{{ url_for('result')}}" method="post" enctype="multipart/form-data">
+
+		<div class="form-field">
+			<label for="example-text-input" class="col-xs-4 col-form-label" >Upload image File: </label>
+			<input type="file" name="myfile" id="file"/>
+		</div>
+
+		<div class="form-field">
+		<label for="example-text-input" class="col-xs-4 col-form-label" ></label>
+		<input type="submit" name="submit" id="cfsubmit" value="Upload"/> 
+		</div>
+		</form>
+        </div>
+
+      </div>
+
+   </body>
+</html>
