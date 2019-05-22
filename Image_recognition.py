@@ -65,7 +65,7 @@ for file in healthy:
         img = img.resize((image_width, image_height), Image.ANTIALIAS)
         x = img_to_array(img)
     # Normalize
-    x = (x - 128.0) / 128.0
+    x = (x - x.mean()) / x.std()
     dataset[i] = x
     i += 1
 print("All healthy images converted to array & dumped into dataset!")
@@ -78,7 +78,7 @@ for file in defect:
         img = img.resize((image_width, image_height), Image.ANTIALIAS)
         x = img_to_array(img)
     # Normalize
-    x = (x - 128.0) / 128.0
+    x = (x - x.mean()) / x.std()
     dataset[i] = x
     i += 1
 print("All defect images converted to array & dumped into dataset!")
@@ -213,7 +213,7 @@ def prediction(file, model):
         img = img.resize((image_width, image_height), Image.ANTIALIAS)
         x = img_to_array(img)
     # Normalize
-    x = (x - 128.0) / 128.0
+    x = (x - x.mean()) / x.std()
     dataset[0] = x
     image = dataset[0].reshape(1, img_rows, img_cols, colors)
     result = model.predict(image)
