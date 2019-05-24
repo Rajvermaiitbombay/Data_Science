@@ -206,7 +206,24 @@ def Gridsearch_optimizer(model):
 def Gridsearch_LearningRate(model):
     model = KerasClassifier(build_fn=model, epochs=5, batch_size=50, verbose=0)
     learning_rate = [0.001, 0.01, 0.1, 0.2, 0.5, 1, 5]
-    param_grid = dict(learning_rate=learning_rate)
+    param_grid = dict(lr=learning_rate)
+    grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1)
+    grid_result = grid.fit(X_train, y_train)
+    # summarize results
+    print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+    means = grid_result.cv_results_['mean_test_score']
+    stds = grid_result.cv_results_['std_test_score']
+    params = grid_result.cv_results_['params']
+    for mean, stdev, param in zip(means, stds, params):
+        print("%f (%f) with: %r" % (mean, stdev, param))
+    return None
+
+
+# gridsearch to select best Dropout Rate
+def Gridsearch_Dropout_rate(model):
+    model = KerasClassifier(build_fn=model, epochs=5, batch_size=50, verbose=0)
+    dropout_rate = [0.0, 0.1, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    param_grid = dict(rate=dropout_rate)
     grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1)
     grid_result = grid.fit(X_train, y_train)
     # summarize results
