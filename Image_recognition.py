@@ -170,8 +170,8 @@ from keras.wrappers.scikit_learn import KerasClassifier
 # gridsearch to select best epochs & batch size
 def Gridsearch_epoch_batchSize(model):
     model = KerasClassifier(build_fn=model, verbose=0)
-    batch_size = [10, 20, 40, 60, 80, 100]
-    epochs = [10, 50, 100]
+    batch_size = [10, 20, 40, 50, 60, 80, 100]
+    epochs = [5, 10, 50, 100]
     param_grid = dict(batch_size=batch_size, epochs=epochs)
     grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1)
     grid_result = grid.fit(X_train, y_train)
