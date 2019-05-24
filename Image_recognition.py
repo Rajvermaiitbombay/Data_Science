@@ -167,8 +167,26 @@ from sklearn.model_selection import GridSearchCV
 from keras.wrappers.scikit_learn import KerasClassifier
 
 
+# gridsearch to select best epochs & batch size
+def Gridsearch_epoch_batchSize(model):
+    model = KerasClassifier(build_fn=model, verbose=0)
+    batch_size = [10, 20, 40, 60, 80, 100]
+    epochs = [10, 50, 100]
+    param_grid = dict(batch_size=batch_size, epochs=epochs)
+    grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1)
+    grid_result = grid.fit(X_train, y_train)
+    # summarize results
+    print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+    means = grid_result.cv_results_['mean_test_score']
+    stds = grid_result.cv_results_['std_test_score']
+    params = grid_result.cv_results_['params']
+    for mean, stdev, param in zip(means, stds, params):
+        print("%f (%f) with: %r" % (mean, stdev, param))
+    return None
+
+
 # gridsearch to select best optimizer
-def gridsearch(model):
+def Gridsearch_optimizer(model):
     model = KerasClassifier(build_fn=model, epochs=5, batch_size=50, verbose=0)
     optimizer = ['SGD', 'RMSprop', 'Adagrad', 'Adadelta', 'Adam', 'Adamax', 'Nadam']
     param_grid = dict(optimizer=optimizer)
@@ -182,6 +200,24 @@ def gridsearch(model):
     for mean, stdev, param in zip(means, stds, params):
         print("%f (%f) with: %r" % (mean, stdev, param))
     return None
+
+
+# gridsearch to select best learning rate
+def Gridsearch_LearningRate(model):
+    model = KerasClassifier(build_fn=model, epochs=5, batch_size=50, verbose=0)
+    learning_rate = [0.001, 0.01, 0.1, 0.2, 0.5, 1, 5]
+    param_grid = dict(learning_rate=learning_rate)
+    grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1)
+    grid_result = grid.fit(X_train, y_train)
+    # summarize results
+    print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+    means = grid_result.cv_results_['mean_test_score']
+    stds = grid_result.cv_results_['std_test_score']
+    params = grid_result.cv_results_['params']
+    for mean, stdev, param in zip(means, stds, params):
+        print("%f (%f) with: %r" % (mean, stdev, param))
+    return None
+
 
 # train the model
 model.fit(X_train, y_train, batch_size=50, epochs=5, verbose=1,
