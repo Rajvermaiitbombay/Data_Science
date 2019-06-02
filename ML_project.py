@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 from sklearn.datasets.samples_generator import make_blobs
 import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.model_selection import GridSearchCV, train_test_split, cross_validate
 from sklearn.metrics import confusion_matrix, accuracy_score
 import os
@@ -20,6 +21,8 @@ df = pd.read_excel('Participants_Data_Final\Data_Train.xlsx')
 # outlier detection & treatment ###
 
 # feature engineering ###
+
+# EDA ###
 
 # feature selection ###
 
