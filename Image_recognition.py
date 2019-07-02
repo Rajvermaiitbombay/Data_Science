@@ -154,6 +154,7 @@ model.add(Dropout(0.5))
 # softmax classifier
 model.add(Dense(2))
 model.add(Activation("softmax"))
+
 model.summary()
 
 # compile model using accuracy to measure model performance
