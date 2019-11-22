@@ -17,11 +17,12 @@ from sklearn.svm import SVC
 from sklearn.ensemble import AdaBoostRegressor, GradientBoostingRegressor
 from sklearn.ensemble import VotingRegressor
 from xgboost.sklearn import XGBRegressor
+from sklearn.metrics import confusion_matrix,accuracy_score,recall_score,precision_score
 import os
 os.chdir(os.path.dirname(__file__))
 
 # Read Excel file #####
-df = pd.read_excel('Participants_Data_Final\Data_Train.xlsx')
+df = pd.read_excel('dataset/Data_Train.xlsx')
 
 # data summarization ###
 def summary(df):
@@ -168,8 +169,7 @@ table.plot(kind='barh',stacked=True)
 
 ## Split the training and tesing datasets from main datasets
 X,y = selected_features[cols], selected_features['COST']
-X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                    test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.33, random_state=42)
 
 
 ## import support vector machine #####
@@ -189,15 +189,22 @@ def Gridsearch_SVM(model):
     params = grid_result.cv_results_['params']
     for mean, stdev, param in zip(means, stds, params):
         print("%f (%f) with: %r" % (mean, stdev, param))
-    return None
+    return grid
 
 # run gridsearch function to find the optimum value of model parameters
-Gridsearch_SVM(model)
+grid = Gridsearch_SVM(model)
+predictions = grid.predict(X_test)
 
 # check the accuracy
 score = model.evaluate(X_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
+
+## model evaluation
+cm = confusion_matrix(y_test, predictions)
+Accuracy_Score = accuracy_score(y_test, predictions)
+Recall = recall_score(y_test, predictions, average='weighted')
+Precision = precision_score(y_test, predictions, average='weighted')
 
 # Build boosting Algorithms
 ada_boost = AdaBoostRegressor() 
@@ -219,3 +226,9 @@ for clf, label in zip([ada_boost, grad_boost, xgb_boost, EnsembleMethod], labels
 # Train Ensemble model to predict the output
 Final_model = EnsembleMethod.fit(X_train, y_train)
 predictions = Final_model.predict(X_test)
+
+## Ensemble model evaluation
+cm = confusion_matrix(y_test, predictions)
+Accuracy_Score = accuracy_score(y_test, predictions)
+Recall = recall_score(y_test, predictions, average='weighted')
+Precision = precision_score(y_test, predictions, average='weighted')

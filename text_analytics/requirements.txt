@@ -1,0 +1,11 @@
+pytesseract
+Pillow
+bs4
+tesseract
+opencv-python
+PyPDF2
+textract
+pdf2image
+nltk
+autocorrect
+wordcloud
