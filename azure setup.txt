@@ -1,0 +1,91 @@
+https://rating.azurewebsites.net/#id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ilg1ZVhrNHh5b2pORnVtMWtsMll0djhkbE5QNC1jNTdkTzZRR1RWQndhTmsifQ.eyJleHAiOjE1NTk1NzMyNDYsIm5iZiI6MTU1OTU2OTY0NiwidmVyIjoiMS4wIiwiaXNzIjoiaHR0cHM6Ly9sb2dpc3RpY3Nub3d0ZWNoLmIyY2xvZ2luLmNvbS90ZnAvYjMxYTQzODYtNjczMi00MjFlLWI2YzEtODIzNmUxOGJhMzhjL2IyY18xX3NpZ251cF9zaWduaW4vdjIuMC8iLCJzdWIiOiIzYjQyZWQ4Mi01ZTkzLTRkNTAtYmZiOS05NGQzNWVhYTBlYTMiLCJhdWQiOiIwZDFlMWM0YS1hYzY2LTQ2YzktOWRiZS0wYmU2NzI3MGY1OWQiLCJub25jZSI6ImRlZmF1bHROb25jZSIsImlhdCI6MTU1OTU2OTY0NiwiYXV0aF90aW1lIjoxNTU5NTY5NjQ2LCJvaWQiOiIzYjQyZWQ4Mi01ZTkzLTRkNTAtYmZiOS05NGQzNWVhYTBlYTMiLCJuYW1lIjoiT21rYXIgR3VsYXZlIiwiZW1haWxzIjpbImFuYWx5dGljc0Bsb2dpc3RpY3Nub3cuaW4iXSwidGZwIjoiQjJDXzFfc2lnbnVwX3NpZ25pbiJ9.d6WmMut_WtocQ6TIQxEfeFffXC67VL_IIuezLwpNnqKpzDbS7thcddb0D5DycmhLa5dHYsau0s_XFgAafP1yCoymCU3DEW-YJxt-A8ZYu0zlu8wcfXIkHMaQ4Ps8wRl2kKWnr-HWGDutcetO6NlsuwQDRAFC3AUPsnJ0eWg1XC_xAefTuZdCtoTx8o85X8y4ffppUmT5ujTUwqFJs_wPvMg2lhNfCs-YYrIP3oVoYJXgUyuYz3qffKh_E-gmZEZXmWpP3nidAudAe5d0qa9csk_wlCvLan6ecjzu7NSnfjO9t2bPWZiowafroffXRs-3nh6vI8iyocESaNx6otm2lw
+
+https://logisticsnowtech.b2clogin.com
+https://reviewrating.z23.web.core.windows.net
+https://vendorcreation.azurewebsites.net/.auth/login/aad/callback
+Deployment to Azure functions through Azure CLI:
+        choco install azure-cli
+        choco install python --version 3.6
+	choco install azure-functions-core-tools
+
+1. Creating virtual env in required folder
+	py -3.6 -m venv .env
+2. Activating venv
+	.env\scripts\activate
+3. Initiating Project
+	func init Function  (project_name)
+4. Go inside the project folder
+	cd Function
+5. Install Requirements using requirements.txt
+	pip install -r requirements.txt
+6. Paste your function code here and Start the function pasted
+	func host start
+7. Publish to Azure
+	func azure functionapp publish apinetwork
+        func azure functionapp publish testln5
+        func azure functionapp publish reviewandrating
+        func azure functionapp publish rating
+        func azure functionapp publish internalapis
+8. To create new func app
+	1. func new
+
+ func azure functionapp publish testln5 --force --build-native-deps --no-bundler
+E:\API\Deployed\Function
+
+my_transporters: [GET,POST] http://localhost:7071/api/my_transporters
+
+transporter_detail: [GET,POST] http://localhost:7071/api/transporter_detail
+
+transporter_search: [GET,POST] http://localhost:7071/api/transporter_search
+
+trigger_email: [GET,POST] http://localhost:7071/api/trigger_email
+
+user_details: [GET,POST] http://localhost:7071/api/user_details
+
+pip install azure-storage-queue
+suzg0376		
+
+cd E:\API\Deployed
+cd E:\API\Test
+
+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
+C:\ProgramData\Anaconda3\pkgs\python-3.7.3-h8c8aaf0_0\Scripts
+
+Here is a solution if you are getting this error on Azure Windows 10 VM where you have installed Docker:
+
+Ensure Windows Hyper-V featutes are enabled by running PowerShell cmdlet:
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -Verbose
+
+Ensure Windows Containers feature is enabled by running PowerShell cmdlet:
+Enable-WindowsOptionalFeature -Online -FeatureName Containers -All -Verbose
+
+Ensure Hypervisor is set to auto start in the Boot Configuration Database (BCD) by running in elevated command prompt the command:
+bcdedit /set hypervisorlaunchtype Auto
+
+PS C:\Users\logisticsnowtech5> cd "C:\Program Files\Docker\Docker"
+PS C:\Program Files\Docker\Docker> ./DockerCli.exe -SwitchDaemon
+
+
+Unable to start: The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop: 'MobyLinuxVM' failed to start.
+
+Failed to start the virtual machine 'MobyLinuxVM' because one of the Hyper-V components is not running.
+
+'MobyLinuxVM' failed to start. (Virtual machine ID 0FE2FB43-1FFE-4EB4-AFD2-18A7358C8570)
+
+The Virtual Machine Management Service failed to start the virtual machine 'MobyLinuxVM' because one of the Hyper-V components is not running (Virtual machine ID 0FE2FB43-1FFE-4EB4-AFD2-18A7358C8570).
+at Start-MobyLinuxVM, <No file>: line 296
+at <ScriptBlock>, <No file>: line 412
+   at Docker.Core.Pipe.NamedPipeClient.Send(String action, Object[] parameters) in C:\workspaces\stable-18.09.x\src\github.com\docker\pinata\win\src\Docker.Core\pipe\NamedPipeClient.cs:line 36
+   at Docker.Actions.<>c__DisplayClass28_0.<SwitchDaemon>b__0() in C:\workspaces\stable-18.09.x\src\github.com\docker\pinata\win\src\Docker.Windows\Actions.cs:line 305
+   at Docker.WPF.TaskQueue.<>c__DisplayClass19_0.<.ctor>b__1() in C:\workspaces\stable-18.09.x\src\github.com\docker\pinata\win\src\Docker.WPF\TaskQueue.cs:line 59
+
+net stop vmms
+net start vmms
+
+After running all of the above and you restart the Azure VM, Docker should be starting normally.
+
+analytics access token:
+
+[{'transporter_name': 'AVINASH CARRIERS P LTD', 'transporter_id': 'IND001406'}, {'transporter_name': 'DHANANJAY ROADWAYS', 'transporter_id': 'IND001407'}, {'transporter_name': 'HUNDEKAREE GOODS TRANSPORT', 'transporter_id': 'IND001408'}, {'transporter_name': 'JAIPUR GOLDEN TRANSPORT', 'transporter_id': 'IND001409'}, {'transporter_name': 'MAHRASHTRA CARGO MOVERS', 'transporter_id': 'IND001410'}, {'transporter_name': 'MATA TRANSPORT AGENCY', 'transporter_id': 'IND001411'}, {'transporter_name': 'MFC PVT LTD', 'transporter_id': 'IND001412'}, {'transporter_name': 'NORTH EASTERN CARRYING CORPORATION', 'transporter_id': 'IND000751'}, {'transporter_name': 'OKARA TRADE PARCEL CARRIERS', 'transporter_id': 'IND001413'}, {'transporter_name': 'PACIFIC ROAD CARRIERS', 'transporter_id': 'IND001414'}, {'transporter_name': 'SANGAM ROAD CARRIERS', 'transporter_id': 'IND001415'}, {'transporter_name': 'SRI BALAJI ROADLINES', 'transporter_id': 'IND001416'}, {'transporter_name': 'TRANSWELL', 'transporter_id': 'IND001417'}, {'transporter_name': 'PRD LOGISTICS', 'transporter_id': 'IND001418'}, {'transporter_name': 'UNION TRANSPORT', 'transporter_id': 'IND001419'}, {'transporter_name': 'KALAYATAN CARGO', 'transporter_id': 'IND001420'}, {'transporter_name': 'LMT', 'transporter_id': 'IND001421'}, {'transporter_name': 'ASSOCIATED ROAD CARRIERS LTD', 'transporter_id': 'IND000095'}, {'transporter_name': 'KERALA PUNE ROADWAYS', 'transporter_id': 'IND001422'}, {'transporter_name': 'V R ENTERPRISES', 'transporter_id': 'IND001423'}, {'transporter_name': 'CJ DARCL LOGISTICS LIMITED', 'transporter_id': 'IND000206'}, {'transporter_name': 'MATA', 'transporter_id': 'IND001424'}, {'transporter_name': 'UNION ROADWAYS LIMITED', 'transporter_id': 'IND001283'}, {'transporter_name': 'MAHARASHTRA CARGO MOVERS', 'transporter_id': 'IND001425'}, {'transporter_name': 'GOLDEN INDIA', 'transporter_id': 'IND001426'}, {'transporter_name': 'LALJI MULJI TRANSPORT', 'transporter_id': 'IND001427'}, {'transporter_name': 'AVIANSH CARGO', 'transporter_id': 'IND001428'}, {'transporter_name': 'HUNDEKARI', 'transporter_id': 'IND001429'}, {'transporter_name': 'ASSOCIATED LOGISTICS', 'transporter_id': 'IND001430'}, {'transporter_name': 'JAIPUR GOLDEN TRANSPORT'}, {'transporter_name': 'ASSOCIATED LOGISTICS'}, {'transporter_name': 'HUNDEKARI'}, {'transporter_name': 'MFC PVT LTD'}, {'transporter_name': 'SANGAM ROAD CARRIERS'}, {'transporter_name': 'V R ENTERPRISES'}, {'transporter_name': 'MATA TRANSPORT AGENCY'}, {'transporter_name': 'PACIFIC ROAD CARRIERS'}, {'transporter_name': 'MAHARASHTRA CARGO MOVERS'}, {'transporter_name': 'MAHRASHTRA CARGO MOVERS'}, {'transporter_name': 'HUNDEKAREE GOODS TRANSPORT'}, {'transporter_name': 'LALJI MULJI TRANSPORT'}, {'transporter_name': 'PRD LOGISTICS'}, {'transporter_name': 'KERALA PUNE ROADWAYS'}, {'transporter_name': 'AVINASH CARRIERS P LTD'}, {'transporter_name': 'LMT'}, {'transporter_name': 'UNION TRANSPORT'}, {'transporter_name': 'GOLDEN INDIA'}, {'transporter_name': 'SRI BALAJI ROADLINES'}, {'transporter_name': 'KALAYATAN CARGO'}, {'transporter_name': 'MATA'}, {'transporter_name': 'OKARA TRADE PARCEL CARRIERS'}, {'transporter_name': 'TRANSWELL'}, {'transporter_name': 'AVIANSH CARGO'}, {'transporter_name': 'DHANANJAY ROADWAYS'}]
+Shubham access token:
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ilg1ZVhrNHh5b2pORnVtMWtsMll0djhkbE5QNC1jNTdkTzZRR1RWQndhTmsifQ.eyJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vYjMxYTQzODYtNjczMi00MjFlLWI2YzEtODIzNmUxOGJhMzhjL3YyLjAvIiwiZXhwIjoxNTU5OTc5NDQ3LCJuYmYiOjE1NTk5NzU4NDcsImF1ZCI6IjVmMDA2Mzg3LTNmYWEtNGMwYy04ODFmLTRlYTdjMWI2MjFjNyIsIm9pZCI6ImM3OTRmM2U2LWFiMDAtNGYxZS1hMDBhLWRkZDUwZjI2NTIwMiIsInN1YiI6ImM3OTRmM2U2LWFiMDAtNGYxZS1hMDBhLWRkZDUwZjI2NTIwMiIsIm5hbWUiOiJTaHViaGFtIiwiZW1haWxzIjpbInNodWJoYW0uamFtYmh1bGthckBwcm9yaWdvc29mdHdhcmUuY29tIl0sInRmcCI6IkIyQ18xX1NpZ25fVXBfU2lnbl9JbiIsIm5vbmNlIjoiODE0MWU0YjYtNTk2Mi00N2Q4LWExNjUtMGIzMDFlNDlhMGU4Iiwic2NwIjoidXNlcl9pbXBlcnNvbmF0aW9uIiwiYXpwIjoiYjhhOGY3YzYtOTg3Ni00MjRmLWI4ODUtYzhhYmQzMGY2YTRiIiwidmVyIjoiMS4wIiwiaWF0IjoxNTU5OTc1ODQ3fQ.YLrenDcI_ajxuitxnRCcihZ6HkQm1ASsrtGV6HfZdM43yil7N05ytPTDLJ5H95xrwq2vc62iEIQCjOiMQ63OCMzYo-sbC5HY-hDFn8DeohllL41AenlEJDrWWjFkf2BMqoA3CkBXJrpIJnjzE4ewaHDD6CRTlQ3FTYPnAfqnfBeJYx8wN_Bga1dvOqAt-LLBjRW5xuOyJfCihljNQZfRFqPQJLnN3rrlDbIQOpB420g-v5Dnywh5UCkFTzI4YuJF4KMBIZ0d6FGHBmLVLyqAXJuEcROVpuFoNESxhaAT_WJgZuZHrimA2ikQJiVtyvkwdfhs_Pe76HsmvJs4-qhdog
