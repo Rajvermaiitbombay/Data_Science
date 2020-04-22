@@ -7,55 +7,54 @@ Created on Fri Feb 28 10:04:19 2020
 
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+import random
 
 df = pd.read_excel('dataset/Data_Train.xlsx')
 df = pd.read_csv('dataset/creditcard.csv')
 
+''' Setting and re-setting index '''
+df = df.reset_index()
+df = df.reset_index(drop=True)
+df = df.set_index('RATING')
+
 df = df.replace({'RATING':['NEW','-']},'0')
 df['RATING'] = df['RATING'].astype('float')
-def datacleaning(df, special_character1=False, digit=False,
-                 nalpha=False):
-    df = df.drop_duplicates(keep='first')
-    df = df.reset_index(drop=True)
-    df_cleaned = df.copy()
-    if special_character1:
-        df_cleaned = df_cleaned.apply(lambda x: x.str.split(r'[^a-zA-Z.\d\s]').
-                                      str[0] if(x.dtypes == object) else x)
-    if digit:
-        df_cleaned = df_cleaned.apply(lambda x: x.str.replace(r'\d+', '')
-                                      if(x.dtypes == object) else x)
-    if nalpha:
-        df_cleaned = df_cleaned.apply(lambda x: x.str.replace(r'\W+', ' ')
-                                      if(x.dtypes == object) else x)
-    df_cleaned = df_cleaned.apply(lambda x: x.str.strip() if(x.dtypes == object)
-                                  else x)
-    df_cleaned['CITY'] = df_cleaned['CITY'].str.replace('New Delhi', 'Delhi')
-    return df_cleaned
-df = df.dropna()
-df = df.fillna('')
+
+df = df.dropna() # drop rows having NA from dataframe
+df1 = df.drop('Row ID',axis=1,inplace=True) # drop one column from dataframe
+df = df.fillna('')  # fill na with '' in dataframe
+
+''' Dealing with datetime '''
 df['Timestamp'] = pd.to_datetime(df['Timestamp'])
 df['months'] = df['Timestamp'].dt.month_name()
 df['day'] = df['Timestamp'].dt.day_name()
-## join 
-resultant = df.merge(company_df, left_on="company_id", right_on="company_id",how='outer')
+
+''' join 2 dataframes '''
 # how: {‘left’, ‘right’, ‘outer’, ‘inner’}
-## sortng
+resultant = df.merge(df1, left_on="company_id", right_on="company_id", how='outer')
+resultant = df.join(df1, how='left')
+
+''' Concatenation '''
+df_cat1 = pd.concat([df1, df2, df3], axis=0)
+df_cat1 = pd.concat([df1, df2, df3], axis=1)
+
+''' sortng '''
 track = df.sort_values(by=['COST'], ascending=False).reset_index(drop=True)
 track = df.sort_values(by=['COST','TITLE'], ascending=False).reset_index(drop=True)
-# find district values
-x = list(pd.unique(track['TITLE']))
-## duplicates
+
+''' Drop duplicate rows '''
 df = df.drop_duplicates(keep='first')
 drop = df.drop_duplicates(subset=['TITLE'], keep='first')
-# find duplicates rows
+
+''' find duplicates rows '''
 duplicates = df[df.duplicated(subset=['TITLE'], keep='first')]
 duplicates = df[df.duplicated()]
-## cumulative sum of crows
-cumsum = df['COST'].cumsum()
 
-## groupby sum,mean, count
+cumsum = df['COST'].cumsum()  ## cumulative sum of crows
+x = list(pd.unique(df['TITLE']))  ## find district values
+x = list(df['TITLE'].unique())   ## find district values
+
+''' groupby sum, mean, count '''
 avg = df.groupby('TITLE').mean()
 avg = df.groupby('TITLE')['COST'].mean()
 summ = df.groupby('TITLE').sum()
@@ -64,55 +63,57 @@ count = df.groupby('TITLE').count()
 count = df.groupby(['TITLE','CUISINES']).count().reset_index()
 count = df['TITLE'].value_counts()
 
-## second highest cost
+''' second highest cost '''
 second = df.sort_values(by='COST', ascending=False).iloc[1,:]
-## pivot table
+
+''' pivot table '''
 table = pd.pivot_table(df, index=["TITLE"], aggfunc=np.sum, fill_value=0)
+table = df.pivot_table(values=['Sales','Quantity','Profit'],index=['Region','State'], aggfunc='mean')
 
-# Exploratory Data Analysis ###
-f, axes = plt.subplots(2, 2)
-sns.boxplot(x=df['COST'], ax=axes[0, 0])
-sns.boxplot(x=df['VOTES'], ax=axes[0,1])
-sns.boxplot(x=df['RATING'] , ax=axes[1,0])
-sns.pairplot(df,vars=['COST','RATING'], kind='scatter')
-sns.countplot(y=df["CITY"])
-sns.countplot(y=df["CUISINES"])
-sns.lineplot(x='months',y='COST',data=df, estimator=np.median)
-sns.barplot(x="COST", y="CITY", data=df, estimator=np.median)
-table=pd.crosstab(df["CUISINES"], df['TITLE'])
-table.plot(kind='barh',stacked=True)
+''' apply method '''
+table = df['Customer Name Length'] = df['Customer Name'].apply(len)
+table = df['Discounted Price'] = df['Sales'].apply(lambda x:0.85*x if x>200 else x)
 
-import numpy as np
-import random
+''' datatypes conversion '''
 x = [1,2,3,4,5,2]
+m = np.array([1,2])
+x.count(3)
+x[::-1]
 y=tuple(x)
 z=list(y)
 z=set(x)
-x.count(3)
-['a' if i==2 else i for i in x]
-np.array([1,2])
-x[::-1]
-y=z.add('a')
-
+z.add('b')
 y=z.copy()
+
+''' single line for loop with ifelse '''
+y = ['a' if i==2 else i for i in x]
+
+''' find intersection b/w 2 sets '''
 z.difference(set(x))
+
+''' generate random int within range '''
 random.randint(1,7)
-x*2
-def summ(n):
+
+'''sum of number'''
+def sum_num(n):
     n = str(n)
     a = [int(i) for i in list(n)]
     b = sum(a)
     return b
+# sum_num(123) == 6
 
-def rev(n):
+''' reverse the number '''
+def reverse_num(n):
     n = str(n)
     a = [i for i in list(n)]
     a = a[::-1]
     b = ''.join(a)
     b = int(b)
     return b
+# reverse_num(123) == 321
 
-def check(n):
+''' check palindrome number'''
+def check_palindrome(n):
     n = str(n)
     a = [i for i in list(n)]
     b = a[::-1]
@@ -121,31 +122,33 @@ def check(n):
     else:
         output = 'No'
     return output
+# check_palindrome(123321) == 'palindrome'
 
-def count(n):
+'''count the digit in number '''
+def count_digit(n):
     n = str(n)
     a = [i for i in list(n)]
     b = len(a)
     return b
+# count_digit(1234) == 4
 
+''' find second largest number in list '''
 def second_large(a):
     a.sort()
     b= a[-2]
     return b
+# second_large([1,2,3,4]) == 3
 
-def swap(a):
-    temp = a[0]
-    a[0] = a[-1]
-    a[-1] = temp
-    return a
-
+''' check prime number '''
 def check_prime(n):
     for i in range(2,n):
+        print(str(n%i))
         if n%i == 0:
             return 'No'
         else:
-            return 'Prime'
-
+            pass
+    return 'Prime'
+# check_prime(9)
 
 
 

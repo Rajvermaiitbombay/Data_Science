@@ -21,6 +21,7 @@ sys.path.insert(0,directory)
 
 ''' data summarization '''
 def summary(df):
+    print(df.shape)
     print('--- Description of numerical variables')
     print(df.describe())
     print('--- Description of categorical variables')
@@ -51,6 +52,8 @@ def datacleaning(df, special_character1=False, digit=False,
     df_cleaned['CITY'] = df_cleaned['CITY'].str.replace('New Delhi', 'Delhi')
     df_cleaned['CITY'] = df_cleaned['CITY'].str.replace('Delhi NCR', 'Delhi')
     df_cleaned['CITY'] = df_cleaned['CITY'].str.replace('Kochi', 'Cochin')
+    replace_values = {'kanpur':['kanpur nagar','kanpur dehat']}
+    df_cleaned['CITY'] = df_cleaned['CITY'].replace(replace_values['kanpur'], 'kanpur')
     return df_cleaned
 
 ''' missing values treatment '''
