@@ -13,6 +13,7 @@ import seaborn as sns
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.metrics import confusion_matrix, classification_report, mean_squared_error
 from sklearn.svm import SVC, SVR
+from sklearn.externals import joblib
 
 directory = os.path.dirname(__file__)
 sys.path.insert(0,directory)
@@ -25,7 +26,7 @@ cleaned_df = Data_preprocessing.datacleaning(df)
 cleaned_df = Data_preprocessing.treat_missingValue(cleaned_df)
 cleaned_df = Data_preprocessing.treat_outliers(cleaned_df)
 feature = Data_preprocessing.featureEngineering(cleaned_df)
-selected_features = Data_preprocessing.Feature_selection(feature)
+selected_features = Data_preprocessing.Feature_selection(feature, num_features, target_col)
 
 ''' Split the training and tesing datasets from main datasets '''
 X,y = selected_features[cols], selected_features['COST']

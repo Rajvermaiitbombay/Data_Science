@@ -24,7 +24,7 @@ cleaned_df = Data_preprocessing.datacleaning(df)
 cleaned_df = Data_preprocessing.treat_missingValue(cleaned_df)
 cleaned_df = Data_preprocessing.treat_outliers(cleaned_df)
 feature = Data_preprocessing.featureEngineering(cleaned_df)
-selected_features = Data_preprocessing.Feature_selection(feature)
+selected_features = Data_preprocessing.Feature_selection(feature, num_features, target_col)
 
 ''' Split the training and tesing datasets from main datasets '''
 X,y = selected_features[cols], selected_features['COST']

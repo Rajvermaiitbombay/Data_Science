@@ -8,12 +8,11 @@ import os
 import sys
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.preprocessing import LabelEncoder
-import statsmodels.api as sm
 from sklearn.feature_selection import SelectKBest, chi2, RFE
 from sklearn.linear_model import LogisticRegression
+from mlxtend.feature_selection import SequentialFeatureSelector as sfs
+from sklearn.ensemble import RandomForestRegressor
 
 directory = os.path.dirname(__file__)
 sys.path.insert(0,directory)
@@ -25,7 +24,7 @@ def summary(df):
     print('--- Description of numerical variables')
     print(df.describe())
     print('--- Description of categorical variables')
-    print(df.describe(include=['object']))
+#    print(df.describe(include=['object']))
     print('--- Gerenal information about variables')
     print(df.info())
     print('--- view the 5 rows of dataset')
@@ -49,8 +48,6 @@ def datacleaning(df, special_character1=False, digit=False,
                                       if(x.dtypes == object) else x)
     df_cleaned = df_cleaned.apply(lambda x: x.str.strip() if(x.dtypes == object)
                                   else x)
-    df_cleaned['CITY'] = df_cleaned['CITY'].str.replace('New Delhi', 'Delhi')
-    df_cleaned['CITY'] = df_cleaned['CITY'].str.replace('Delhi NCR', 'Delhi')
     df_cleaned['CITY'] = df_cleaned['CITY'].str.replace('Kochi', 'Cochin')
     replace_values = {'kanpur':['kanpur nagar','kanpur dehat']}
     df_cleaned['CITY'] = df_cleaned['CITY'].replace(replace_values['kanpur'], 'kanpur')
@@ -125,59 +122,62 @@ def featureEngineering(df):
     return df
 
 ''' Feature Selection '''
-def Feature_selection(df):
-    #Backward Elimination
-    X = df.iloc[:,1:11]
-    y = df.iloc[:,11]
-    cols = list(X.columns)
-    pmax = 1
-    while (len(cols)>0):
-        p= []
-        X_1 = X[cols]
-        X_1 = sm.add_constant(X_1)
-        model = sm.OLS(y,X_1).fit()
-        p = pd.Series(model.pvalues.values[1:],index = cols)      
-        pmax = max(p)
-        feature_with_p_max = p.idxmax()
-        if(pmax>0.05):
-            cols.remove(feature_with_p_max)
-        else:
-            break
-    print('selected_features_set1:' + str(cols))
+def Feature_selection(df, num_features, target_col):
+    df = df.apply(lambda x: x.astype('float64'))
+    #Backward Elimination with R-squared
+    X = df.drop(target_col, axis=1)
+    y = df[[target_col]]
+    backwardModel = sfs(RandomForestRegressor(),k_features= num_features,forward=False,cv=5,n_jobs=-1,scoring='r2')
+#    scoring = 'roc-auc' used for classification
+    backwardModel.fit(np.array(X),y)
+    features1 = list(X.columns[list(backwardModel.k_feature_idx_)])
+    print('selected features set1:' + str(features1))
     
     # using statistics method
-    X_new = SelectKBest(chi2, k=6).fit_transform(X, y)
-    cols = X_new.columns
-    print('selected_features_set2:' + str(cols))
+    model = SelectKBest(chi2, k=num_features)
+    fit = model.fit(X, y)
+    features = fit.transform(X)
+    selected = features[0:1,:].tolist()[0]
+    cols = X.iloc[0:1,:].values.tolist()[0]
+    ind_dict = dict((k,i) for i,k in enumerate(cols))
+    inter = set(ind_dict).intersection(selected)
+    indices = [ ind_dict[x] for x in inter]
+    features2 = [list(X.columns)[i] for i in indices]
+    print('Selected features set2:' + str(features2))
     
     # Recursive Feature Elimination
     model = LogisticRegression()
-    rfe = RFE(model, 6)
+    rfe = RFE(model, num_features)
     fit = rfe.fit(X, y)
+    features = fit.transform(X)
+    cols = list(X.columns)
+    selected = list(fit.support_)
+    features = [i if j==True else '' for i,j in zip(cols, selected)]
+    features3 = list(pd.unique(features))
+    features3.remove('')
     print("Feature Ranking: %s" % (fit.ranking_))
-    return None
+    print("Selected Features set3: %s" % (features3))
+    features = list(set(features1).intersection(features2).intersection(features3))
+    return features
 
-''' Exploratory Data Analysis '''
-def EDA(feature):
-    f, axes = plt.subplots(2, 2)
-    sns.boxplot(x=feature['COST'], ax=axes[0, 0])
-    sns.boxplot(x=feature['VOTES'], ax=axes[0,1])
-    sns.boxplot(x=feature['RATING'] , ax=axes[1,0])
-    sns.pairplot(feature,vars=['COST','VOTES','RATING'], kind='scatter')
-    sns.countplot(y=feature["CITY"])
-    sns.countplot(y=feature["CUISINES"])
-    sns.countplot(x='CUISINES',hue='months',data=feature, palette='Set1')
-    sns.lineplot(x='months',y='COST',data=feature, estimator=np.median)
-    sns.barplot(x="COST", y="CITY", data=feature, estimator=np.median)
-    table=pd.crosstab(feature["CUISINES"], feature['CITY'])
-    table.plot(kind='barh',stacked=True)
-    return None
 
 if __name__ == '__main__':
-    df = pd.read_excel('dataset/Data_Train.xlsx')
+    ''' read dataset '''
+    df1 = pd.read_csv('dataset/winequality-red.csv')
+    cols = list(df1.columns)[0].split(';')
+    cols = [i.replace(r'"', '') for i in cols]
+    df1.columns = ['col']
+    df1 = pd.concat([df1,df1.col.str.split(';',expand=True)],1)
+    df2 = pd.read_csv('dataset/winequality-white.csv')
+    df2.columns = ['col']
+    df2 = pd.concat([df2,df2.col.str.split(';',expand=True)],1)
+    frames = [df1, df2]
+    df = pd.concat(frames)
+    df = df.reset_index(drop=True)
+    df = df.drop('col', axis=1)
+    df.columns = cols
+    ''' preprocessing data '''
     summary(df)
-    cleaned_df = datacleaning(df)
-    cleaned_df = treat_missingValue(cleaned_df)
+    cleaned_df = treat_missingValue(df)
     cleaned_df = treat_outliers(cleaned_df)
-    feature = featureEngineering(cleaned_df)
-    selected_features = Feature_selection(feature)
+    selected_features = Feature_selection(cleaned_df, 10, 'quality')
