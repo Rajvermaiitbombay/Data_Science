@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Fri Apr 24 14:06:49 2020
 
@@ -20,6 +19,10 @@ from sklearn.metrics import mean_squared_error
 from sklearn.svm import SVR
 from sklearn.externals import joblib
 from bson.json_util import dumps
+import azure.functions as func
+import logging
+import openpyxl
+
 
 directory = os.path.dirname(__file__)
 sys.path.insert(0,directory)
@@ -108,7 +111,7 @@ def prediction(test_data):
     output = model.predict(test_data)
     test_data['output'] = output
     test_data.to_excel(directory+'result.xlsx')
-    blob.writeBlob(directory+'result.xlsx', 'result.xlsx', 'rajkumar') 
+    blob.writeBlob(directory+'result.xlsx', 'result.xlsx', 'rajkumar')    
     return output    
 
 '''train existing model '''
@@ -140,50 +143,47 @@ def evaluate_model():
     model = blob.getBlob_stream('mymodel.pkl', container_name='rajkumar') # Load "model.pkl"   
     score = model.score(X_test, y_test)
     return score
+    
 
-def main_func(request):
-    if request.method == 'OPTIONS':
-        headers = {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET',
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Max-Age': '3600'
-        }
-        return ('', 204, headers)
-
-    # Set CORS headers for main requests
-    headers = {
-        'Access-Control-Allow-Origin': '*'
-    }
-    req_body = request.get_json()
-    if req_body is None:
-        error = 'test data not found'
-        return (f"{error}!", 401, headers)
-    else:
-        purpose = req_body['purpose']
-    if purpose == 'prediciton':
-        try:
-            data = req_body['data']
-            test_data = pd.DataFrame(data)
-            output = prediction(test_data)
-            dictt = {'output': output}
-            return (dumps(dictt), 200, headers)
-        except Exception as e:
-            dictt = {"error": str(e)}
-            return (dumps(dictt), 401, headers)
-    elif purpose == 'training':
-        key = req_body['key']
-        status = train_model(key)
-        dictt = {'status': status}
-        return (dumps(dictt), 200, headers)
-    elif purpose == 'evaluation':
-        try:
-            score = evaluate_model()
-            dictt = {'score': score}
-            return (dumps(dictt), 200, headers)
-        except Exception as e:
-            dictt = {"error": str(e)}
-            return (dumps(dictt), 401, headers)        
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    try: 
+        logging.info('Python HTTP trigger function processed a request.')
         
-    
-    
+        #Declaring headers for response
+        headers = {}
+        headers["Content-Type"] = "application/json"
+        headers["Access-Control-Allow-Origin"] = "*"
+        headers["Access-Control-Allow-Headers"] = "Authorization"
+        req_body = req.get_json()
+        if req_body is None:
+            error = 'key is not found'
+            return func.HttpResponse(f"{error}!", status_code=401, headers=headers)
+        else:
+            purpose = req_body['purpose']
+        if purpose == 'prediciton':
+            try:
+                data = req_body['data']
+                test_data = pd.DataFrame(data)
+                output = prediction(test_data)
+                dictt = {'output': output}
+                return func.HttpResponse(dumps(dictt), status_code=200, headers=headers)
+            except Exception as e:
+                dictt = {"error": str(e)}
+                return func.HttpResponse(dumps(dictt), status_code=401, headers=headers)
+        elif purpose == 'training':
+            key = req_body['key']
+            status = train_model(key)
+            dictt = {'status': status}
+            return func.HttpResponse(dumps(dictt), status_code=200, headers=headers)
+        elif purpose == 'evaluation':
+            try:
+                score = evaluate_model()
+                dictt = {'score': score}
+                return func.HttpResponse(dumps(dictt), status_code=200, headers=headers)
+            except Exception as e:
+                dictt = {"error": str(e)}
+                return func.HttpResponse(dumps(dictt), status_code=401, headers=headers) 
+    except Exception as e:
+        status = {"message": "Error: " + str(e)}
+        response_code = 501
+        return func.HttpResponse(dumps(status), status_code=response_code, headers=headers)

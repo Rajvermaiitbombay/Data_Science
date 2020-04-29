@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-# """
-# Created on Fri Apr 19 20:47:07 2019
+"""
+ Created on Fri Apr 19 20:47:07 2019
 
-# @author: Kishan Tripathi
-# """
+ @author: Rajkumar
+ """
 
 from azure.storage.blob import BlockBlobService
 import pandas as pd
@@ -84,9 +83,10 @@ def getBlob_stream(blob_name_incont, container_name='dcrawfile'):
     model = joblib.load(my_stream_obj)
     return model
 
-def writeBlob_stream(blob_name_incont, container_name='dcrawfile'):
-    file_stream = blob_name_incont.stream
+def writeBlob_stream(blob_name_incont, filename, container_name='dcrawfile'):
+    file_stream = io.BytesIO(blob_name_incont)
     block_blob_service = connInitate()
-    block_blob_service.create_blob_from_stream(container_name, blob_name_incont,
+    block_blob_service.create_blob_from_stream(container_name, filename,
                                                       file_stream)
+    print('pass')
     return None
