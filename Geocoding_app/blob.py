@@ -10,7 +10,6 @@ import io
 import os
 import re
 import sys
-from sklearn.externals import joblib
 
 directory = os.path.dirname(__file__)
 sys.path.insert(0,directory)
@@ -72,16 +71,6 @@ def getBlob_url(dataset_id, url, container_name='dcrawfile'):
         xls = pd.ExcelFile(my_stream_obj)
         df = xls.parse(0)
     return df
-
-def getBlob_stream(blob_name_incont, container_name='dcrawfile'):
-    block_blob_service = connInitate()
-    my_stream_obj = io.BytesIO()
-#    blob_name_incont = "%s_%sraw.xlsx" % (dataset_id, filename)
-    block_blob_service.get_blob_to_stream(container_name, blob_name_incont,
-                                          my_stream_obj)
-    my_stream_obj.seek(0)
-    model = joblib.load(my_stream_obj)
-    return model
 
 def writeBlob_stream(blob_name_incont, filename, container_name='dcrawfile'):
     file_stream = io.BytesIO(blob_name_incont)

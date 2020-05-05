@@ -90,3 +90,12 @@ def writeBlob_stream(blob_name_incont, filename, container_name='dcrawfile'):
                                                       file_stream)
     print('pass')
     return None
+
+def writeBlob_text(df, filename, container_name='dcrawfile'):
+    file_stream = io.StringIO()
+    file_stream=df.to_csv(index_label="idx",encoding="utf-8")
+    block_blob_service = connInitate()
+    block_blob_service.create_blob_from_text(container_name, filename,
+                                                      file_stream)
+    print('pass')
+    return None

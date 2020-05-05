@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Data Cleaning App</title>
+		<link href="static/css/login.css" rel="stylesheet">
+	</head>
+	<body>
+		<center>
+		</center>
+		<div class="container">
+			<div class="left"></div>
+			<div class="right">
+				<div class="formBox">
+					<h4>Sign In</h4>
+<form action = "{{ url_for('form')}}" method="post" enctype="multipart/form-data">
+        <div class="user">
+            <input type="text" placeholder="Username" name="username" value="{{request.form.username}}" required>
+        </div>
+        <br>
+        <div class="password">
+            <input type="password" placeholder="Password" name="password" value="{{request.form.password}}" required>
+        </div>
+        <br>    
+            <input class="btn btn-default" type="submit" value="Login">
+            <h6>Forgot Password? </h6>
+            <h6><u>Sign Up</u></h6>
+        </form>
+        {% if error %}
+            <p class="error"><strong>Error:</strong>{{error}}
+        {% endif %}
+        </div>
+        </div>
+    </div> 
+	</body>
+</html>

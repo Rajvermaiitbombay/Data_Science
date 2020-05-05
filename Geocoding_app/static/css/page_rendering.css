@@ -1,0 +1,16 @@
+.loading-area{
+
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 5000;
+left: 0%;
+top: 0%;
+
+}
+.loading-image{
+height: 120px;
+width: 120px;
+margin-top: 22%;
+margin-left: 44%;
+}

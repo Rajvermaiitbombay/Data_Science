@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Upload</title>
+<!--loading icon -->
+<script type="text/javascript" src="static/js/loadingimg1.js"></script>
+<script type="text/javascript" src="static/js/loadingimg2.js"></script>
+<script type="text/javascript" src="static/js/loadingimg3.js"></script>
+
+<link rel= "stylesheet" type= "text/css" href= "static/css/style.css">
+<link rel= "stylesheet" type= "text/css" href= "static/css/panel.css">
+<link rel= "stylesheet" type= "text/css" href= "static/css/button.css">
+<link rel= "stylesheet" type= "text/css" href= "static/css/table.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+        
+<style type="text/css">
+
+.loading-area{
+  background-color: #FFF;
+  border-radius: 20px !important;
+  position: absolute;
+  left: 43%;
+  top: 35%;
+  height: 25%;
+  width: 15%;
+}
+.loading-text{
+  color: #000;
+  font-size: 15px;
+}
+.loading-image{
+  height: 80px;
+  width: 80px;
+  padding-top: 20px;
+}
+#load{width:5%; height:5%;}
+
+ons-page {
+  display: block;
+}
+ons-page {
+  z-index: 2;
+}
+/* topdoc
+  name: Modal
+  class: modal
+  markup:
+    <div class="modal">
+      <div class="modal__content">
+        Message Text
+      </div>
+    </div>
+*/
+.modal {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  white-space: nowrap;
+  overflow: hidden;
+  word-spacing: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  line-height: normal;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 17px;
+  overflow: hidden;
+  background-color: rgba(0,0,0,0.7);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: table;
+  z-index: 2147483647;
+}
+.modal__content {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  white-space: nowrap;
+  overflow: hidden;
+  word-spacing: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  line-height: normal;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 17px;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  color: #fff;
+  white-space: normal;
+}
+select option:disabled {
+  background: rgba(142, 145, 144, 0.959);
+  color: #FFF;
+}
+</style>
+</head> 
+
+<body>
+<ons-modal var="loading_icon">
+		<div class="loading-area">
+		  <img class="loading-image" src="static/css/images/loading.gif">
+		  <p class="loading-text">Processing ...</p>
+		</div>
+</ons-modal>
+
+<ons-page id="my-page">
+       <P><h1> <b>Upload the Excel file: </b></h1></br> </br>
+
+		<form action="{{ url_for('result')}}" method="post" enctype="multipart/form-data">
+
+		<div class="form-field">
+			<label for="example-text-input" class="col-xs-4 col-form-label" >Upload Dataset File: </label>
+			<input type="file" name="myfile" id="file"/>
+		</div>
+
+		<div class="form-field">
+		<label for="example-text-input" class="col-xs-4 col-form-label" ></label>
+		<button type="submit" name="submit" id="save"> Upload<button>
+		</div>
+		</form>
+
+</ons-page>
+
+<script type="text/javascript">
+ons.bootstrap();
+$(document.body).on("pageinit", "#my-page", function() {
+  $("#save", this).click(function() {
+    loading_icon.show();
+  });
+});
+</script>
+
+
+</body>  
+</html>
