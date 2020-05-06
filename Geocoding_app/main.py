@@ -49,8 +49,11 @@ def mail_fun(data):
     df = df.reset_index(drop=True)
     output = data.merge(df, left_on='Full Address', right_on="location", how='inner')
     output = output.drop('location', axis=1)
-    output.columns = ['Ward #', 'Sr. No', 'Pin Code', 'Pincode Address', ' Area Type',
-                      'Full Address', 'latitue', 'longlitude', 'Right Address']
+    try:
+        output.columns = ['Ward #', 'Sr. No', 'Pin Code', 'Pincode Address', ' Area Type',
+                          'Full Address', 'latitue', 'longlitude', 'Right Address']
+    except Exception:
+        pass
     blob.writeBlob_text(output, 'output.csv', container_name='rajkumar')
     return None
         
