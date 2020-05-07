@@ -26,7 +26,6 @@ tf.disable_v2_behavior()
 import matplotlib.pyplot as plt
 import json
 
-
 directory = os.path.dirname(__file__)
 sys.path.insert(0,directory)
 
@@ -60,6 +59,8 @@ def data_preparation(feature_selection=False):
         features = ['volatile acidity', 'sulphates', 'citric acid', 'alcohol', 'pH',
                    'residual sugar', 'free sulfur dioxide', 'chlorides']
     selected_features = cleaned_df[features]
+    joblib.dump(list(selected_features.columns), directory+'model_columns.pkl')
+    blob.writeBlob(directory+'model_columns.pkl', 'model_columns.pkl', 'rajkumar')
     target = cleaned_df['quality']
     target = pd.get_dummies(target).values
     selected_features = np.asanyarray(selected_features)
@@ -71,9 +72,6 @@ def data_preparation(feature_selection=False):
 def data_segregation(selected_features, target):
     X_train, X_test, y_train, y_test = train_test_split(selected_features, target,test_size=0.33, random_state=42)
     return X_train, X_test, y_train, y_test
-
-def error_rate(p, t):
-  return np.mean(p != t)
 
 ''' Build Neural network model '''
 
@@ -106,7 +104,6 @@ def build_model(prediction=False):
     return cost, predict
 
 def fit_model(Xtrain, Ytrain, Xtest, Ytest, savefile):
-
     N = Xtrain.shape[0]
     # hyperparams
     max_iter = 30
@@ -142,7 +139,7 @@ def fit_model(Xtrain, Ytrain, Xtest, Ytest, savefile):
         # save the model
         saver = tf.train.Saver({'hidden_w': hidden_w, 'output_w': output_w, 'hidden_b': hidden_b,
                                 'output_b': output_b}) 
-        saver.save(session, savefile)
+        saver.save(session, directory+savefile)
 
     plt.plot(costs)
     plt.show()
@@ -151,15 +148,14 @@ def fit_model(Xtrain, Ytrain, Xtest, Ytest, savefile):
 
 ''' train the support vector regression model '''
 
-def model_training():
-    savefile = directory+"tf.model"
+def model_training(savefile):
     selected_features, target = data_preparation(feature_selection=False)
     X_train, X_test, y_train, y_test = train_test_split(selected_features, target, test_size=0.33, random_state=42)
-    fit_model(X_train, y_train, X_test, y_test, savefile)
+    fit_model(X_train, y_train, X_test, y_test, directory+savefile)
     return 'pass'
 
 '''Export the ML model  '''
-def export_model(filename):
+def export_model():
     checkpoint = directory+"checkpoint"
     blob.writeBlob(checkpoint, "checkpoint", 'rajkumar')
     model = directory+"tf.model.data-00000-of-00001"
@@ -172,6 +168,11 @@ def export_model(filename):
 
 '''Predict the result '''
 def prediction(test_data, savefile):
+    model_columns = blob.getBlob_stream("model_columns.pkl", container_name='rajkumar') # Load "model_columns.pkl"
+    print ('Model columns loaded')
+    test_data = test_data.reindex(columns=model_columns, fill_value=0)
+    test_data = np.asanyarray(test_data)    
+    
     blob.getBlob("checkpoint", directory+"checkpoint", container_name='rajkumar')
     blob.getBlob("tf.model.data-00000-of-00001", directory+"tf.model.data-00000-of-00001", container_name='rajkumar')
     blob.getBlob("tf.model.index", directory+"tf.model.index", container_name='rajkumar')
@@ -180,47 +181,61 @@ def prediction(test_data, savefile):
         cost, predict = build_model(prediction=True)
         saver = tf.train.Saver({'hidden_w': hidden_w, 'output_w': output_w, 'hidden_b': hidden_b,
                                 'output_b': output_b})
-        saver.restore(session, savefile)
+        saver.restore(session, directory+savefile)
         output = session.run(predict, feed_dict={X: test_data})
-    test_data = pd.DataFrame(test_data)
-    test_data['output'] = output
-    test_data.to_excel(directory+'result.xlsx')
+
+    test_data = pd.DataFrame(test_data, columns=model_columns)
+    output = pd.DataFrame(output)
+    result = pd.concat([test_data, output], axis=1)
+    result.to_excel(directory+'result.xlsx')
     blob.writeBlob(directory+'result.xlsx', 'result.xlsx', 'rajkumar')    
     return output    
 
 '''train existing model '''
 
-def train_model(key='repeat'):
+def train_model(savefile, key='repeat'):
     try:
-        selected_features, target = data_preparation(feature_selection=False)
-        X_train, X_test, y_train, y_test = data_segregation(selected_features, target)
-        model = model_training(selected_features, target)
+        model_training(savefile)
         if key == 'initial':
-            export_model(model)
-            export_columns(selected_features)
+            export_model()
         else:
-            score1 = model.score(X_test, y_test)
-            existing_model = blob.getBlob_stream('mymodel.pkl', container_name='rajkumar') # Load "model.pkl"   
-            score2 = existing_model.score(X_test, y_test)
+            selected_features, target = data_preparation(feature_selection=False)
+            X_train, X1, y_train, Y1 = train_test_split(selected_features, target, test_size=0.33, random_state=42)
+            with tf.Session() as session:
+                cost, predict = build_model(prediction=True)
+                saver = tf.train.Saver({'hidden_w': hidden_w, 'output_w': output_w, 'hidden_b': hidden_b,
+                                        'output_b': output_b})
+                saver.restore(session, directory+savefile)
+                output = session.run(predict, feed_dict={X: X1})
+            score1 = 1 - error_rate(output, Y1)
+            score2 = evaluate_model(savefile)
             if score1 > score2:
-                export_model(model)
+                export_model()
             else:
                 return 'existing model is good'
         return 'successfully updated'
     except Exception:
         return 'fail'
-    
-def score(X, Y, savefile):
-    return 1 - error_rate(predict(X, savefile), Y)
+ 
+def error_rate(p, t):
+  return np.mean(p != t)
 
-'''Evaluation of regression '''
-def evaluate_model():
+'''Evaluation of ANN '''
+def evaluate_model(savefile):
     selected_features, target = data_preparation(feature_selection=False)
-    X_train, X_test, y_train, y_test = data_segregation(selected_features, target)
-    savefile = blob.getBlob_stream("tf.model", container_name='rajkumar')  
-    score = model.score(X_test, y_test)
-    return score
-    
+    X_train, X1, y_train, Y1 = train_test_split(selected_features, target, test_size=0.33, random_state=42)
+    blob.getBlob("checkpoint", directory+"checkpoint", container_name='rajkumar')
+    blob.getBlob("tf.model.data-00000-of-00001", directory+"tf.model.data-00000-of-00001", container_name='rajkumar')
+    blob.getBlob("tf.model.index", directory+"tf.model.index", container_name='rajkumar')
+    blob.getBlob("tf.model.meta", directory+"tf.model.meta", container_name='rajkumar')
+    with tf.Session() as session:
+        cost, predict = build_model(prediction=True)
+        saver = tf.train.Saver({'hidden_w': hidden_w, 'output_w': output_w, 'hidden_b': hidden_b,
+                                'output_b': output_b})
+        saver.restore(session, directory+savefile)
+        output = session.run(predict, feed_dict={X: X1})
+    return 1 - error_rate(output, Y1)
+
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     try: 
@@ -236,25 +251,26 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             error = 'key is not found'
             return func.HttpResponse(f"{error}!", status_code=401, headers=headers)
         else:
+            savefile = req_body['model']
             purpose = req_body['purpose']
         if purpose == 'prediciton':
             try:
                 data = req_body['data']
                 test_data = pd.DataFrame(data)
-                output = prediction(test_data)
-                dictt = {'output': output}
+                output = prediction(test_data, savefile)
+                dictt = {'output': str(output)}
                 return func.HttpResponse(dumps(dictt), status_code=200, headers=headers)
             except Exception as e:
                 dictt = {"error": str(e)}
                 return func.HttpResponse(dumps(dictt), status_code=401, headers=headers)
         elif purpose == 'training':
             key = req_body['key']
-            status = train_model(key)
+            status = train_model(savefile, key)
             dictt = {'status': status}
             return func.HttpResponse(dumps(dictt), status_code=200, headers=headers)
         elif purpose == 'evaluation':
             try:
-                score = evaluate_model()
+                score = evaluate_model(savefile)
                 dictt = {'score': score}
                 return func.HttpResponse(dumps(dictt), status_code=200, headers=headers)
             except Exception as e:
