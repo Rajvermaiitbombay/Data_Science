@@ -65,28 +65,58 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #to tell flask what url shoud trigger the function index()
 @app.route('/')
-def login():
-    return render_template('login.html')
+def index():
+    return render_template('index.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def form():
+@app.route('/register')
+def prog():
+    return render_template('signupform.html')
+@app.route('/logout')
+def logout():
+    return render_template('signupform.html')
+
+@app.route('/signup', methods = ['GET','POST'])
+def signup():
     if request.method == 'GET':
         return render_template('notify.html')
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if username == 'admin' and password == 'admin':
-            return render_template('upload.html')
-        elif username == 'admin' and password != 'admin':
-            error = 'Invalid Credentials. Please try again.'
-            return render_template('login.html', error=error)
-        elif username != 'admin' and password == 'admin':
-            error = 'Invalid Credentials. Please try again.'
-            return render_template('login.html', error=error)
-        elif username != 'admin' and password != 'admin':
-            error = 'Invalid Credentials. Please try again.'
-            return render_template('login.html', error=error)
+    else:
+        name = request.form['username']
+        email = request.form['email']
+        password = request.form['pass']
+        signup = pd.read_csv(blob_url+'signup.csv')
+        signup = signup.drop('idx', axis=1)
+        if signup[signup["username"]==name].empty == False:
+            error = 'Username already exist' 
+            return render_template('signupform.html', error=error)             
+        add = pd.DataFrame({'username':[name],'email_id':[email],'password':[password]})
+        signup = signup.append(add)
+        blob.writeBlob_text(signup, 'signup.csv', container_name='rajkumar')
+        return render_template('signupform.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    info = pd.read_csv(blob_url+'signup.csv')
+    user = request.form['username']
+    password = request.form['password']
+    if info[info["username"]==user].empty == True and info[info["password"]==password].empty == True:
+        error = 'username and password, both are incorrect!' 
+        return render_template('signupform.html',error=error) 
+    elif info[info["username"]==user].empty == True:
+        error = 'username incorrect!' 
+        return render_template('signupform.html',error=error)
+    elif password != info[info["username"]==user].set_index('username')["password"][user] and info[info["username"]==user].empty == False:
+        error = 'password incorrect!' 
+        return render_template('signupform.html',error=error)
+    elif password == info[info["username"]==user].set_index('username')["password"][user]: 
+        return render_template('upload.html') 
+    else:
+        return render_template('signupform.html')
+
+@app.route('/upload')
+def upload():
+    if request.method == 'GET':
+        return render_template('notify.html')
+    return render_template('upload.html')
 
 # result page
 @app.route('/result', methods=['GET', 'POST'])

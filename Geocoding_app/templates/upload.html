@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-
+<link rel= "stylesheet" type= "text/css" href= "static\signup.css">
         
 <style type="text/css">
 
@@ -128,7 +128,9 @@ select option:disabled {
   background: rgba(142, 145, 144, 0.959);
   color: #FFF;
 }
+#my-page{background: white;margin-top: 10%;opacity: 0.8;}
 </style>
+
 </head> 
 
 <body>
@@ -140,7 +142,7 @@ select option:disabled {
 </ons-modal>
 
 <ons-page id="my-page">
-       <P><h1> <b>Upload the Excel file: </b></h1></br> </br>
+       <P><h1 style="text-align: center;"> <b>Upload the Excel file: </b></h1></br> </br>
 
 		<form action="{{ url_for('result')}}" method="post" enctype="multipart/form-data">
 

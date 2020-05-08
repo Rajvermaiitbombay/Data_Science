@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel= "stylesheet" type= "text/css" href= "static\signup.css">
+<link rel= "stylesheet" type= "text/css" href= "static\register.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+$("#signup").click(function() {
+  $(".message").css("transform", "translateX(0)");
+  if ($(".message").hasClass("login")) {
+    $(".message").removeClass("login");
+  }
+  $(".message").addClass("signup");
+});
+
+$("#login").click(function() {
+  $(".message").css("transform", "translateX(100%)");
+  if ($(".message").hasClass("login")) {
+    $(".message").removeClass("signup");
+  }
+  $(".message").addClass("login");
+});
+});
+</script>
+</head>
+<body>
+<div class="container">
+  <div class="message signup">
+    <div class="btn-wrapper">
+      <button class="button" id="signup">SignUp</button>
+      <button class="button" id="login"> Login</button>
+    </div>
+  </div>
+    <div class="form form--login">
+    <div class="form--heading">Welcome back! </div>
+    <form action = "{{ url_for('login')}}" method="post" enctype="multipart/form-data" autocomplete="off">
+        <div class="question">
+    <input type="text" name="username" required/><label>Username</label>
+  </div>
+    <div class="question">
+    <input type="password" name="password" required/>
+    <label>Password</label>
+  </div>
+<button type="submit">Login</button>
+        {% if error %}
+            <p class="error"><strong>Error: </strong>{{error}}
+        {% endif %}
+    </form>
+  </div>
+  <div class="form form--signup">
+    <div class="form--heading">Welcome! Sign Up</div>
+    <form action = "{{ url_for('signup')}}" method="post" enctype="multipart/form-data" autocomplete="off">
+        <div class="question">
+    <input type="text" name="username" required/><label>Username</label>
+  </div>
+  <div class="question">
+    <input type="text" name="email" required/>
+    <label>Email Address</label>
+  </div>
+    <div class="question">
+    <input type="password" name="pass" required/>
+    <label>Password</label>
+  </div>
+<button type="submit">Sign up</button>
+    </form>
+  </div>
+
+</div>
+
+</body>
+</html>
