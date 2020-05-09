@@ -13,6 +13,7 @@ import pandas as pd
 import numpy as np
 from flask import Flask, render_template, request, send_file, Response
 import requests
+from threading import Thread
 import io
 
 directory = os.path.dirname(__file__)
@@ -22,6 +23,19 @@ import blob
 directory = 'tmp/'
 blob_url = 'https://logisticsnowtech3.blob.core.windows.net/rajkumar/'
 
+class ThreadWithReturnValue(Thread):
+    def __init__(self, group=None, target=None, name=None,
+                 args=(), kwargs={}, Verbose=None):
+        Thread.__init__(self, group, target, name, args, kwargs)
+        self._return = None
+    def run(self):
+        print(type(self._target))
+        if self._target is not None:
+            self._return = self._target(*self._args,
+                                                **self._kwargs)
+    def join(self, *args):
+        Thread.join(self, *args)
+        return self._return
 
 '''Generate geocoding from address '''
 def generate(address):
@@ -37,8 +51,7 @@ def generate(address):
     dfh = pd.DataFrame({'location': [address], 'lat': [lat], 'lon': [lon], 'address': [right_address]})
     return dfh
 
-def mail_fun(data):
-    list1 = list(data['Full Address'])
+def geocoding(list1):
     df = pd.DataFrame()
     for ind in list1:
         try:
@@ -46,6 +59,21 @@ def mail_fun(data):
             df = df.append(dfh)
         except Exception as e:
             print(str(e))    
+    return df
+
+def mail_fun(data):
+    list1 = list(data['Full Address'])
+    threads = [None] * 3
+    threads[0] = ThreadWithReturnValue(target=geocoding, args=(list1[:200],))
+    threads[1] = ThreadWithReturnValue(target=geocoding, args=(list1[200:400],))
+    threads[2] = ThreadWithReturnValue(target=geocoding, args=(list1[400:],))
+    threads[0].start()
+    threads[1].start()
+    threads[2].start()
+    df1 = threads[0].join()
+    df2 = threads[1].join()
+    df3 = threads[2].join()
+    df = pd.concat([df1, df2, df3], axis=0)
     df = df.reset_index(drop=True)
     output = data.merge(df, left_on='Full Address', right_on="location", how='inner')
     output = output.drop('location', axis=1)
