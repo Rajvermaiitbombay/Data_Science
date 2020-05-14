@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Transporter</title>
+<link rel= "stylesheet" type= "text/css" href= "static/css/style.css">
+<link rel= "stylesheet" type= "text/css" href= "static/css/button.css">
+<link rel= "stylesheet" type= "text/css" href= "static/css/popup.css">
+<link rel="stylesheet" type="text/css" href="static/css/popup_form.css">
+<!-- dropdown -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet">
+</head>  
+   <header>
+       <div class="row"> 
+      <img src="static/css/images/logo.png" width="120" height="59" style="position:absolute; top:0%; left:0%;">
+      <h1 class='heading'>Update Transporter Details</h1>
+      <ul class="main-nav">
+        <b><li><a href="/"> Logout </a></li></b>
+       </ul>
+       </div>       
+   </header> 
+<body>
+<style>
+body{height: 99%;width: 99%;}
+.heading{left: 36%; font-size: 25px; color: white;top: 0%;}
+.row{height: 100%;width: 100%;}
+.maindiv{position: absolute;height: 90%;width: 95%;left: 0%;top:8%;}
+h1{position: absolute;left: 38%;top: 5%; color: black;}
+#Transporter-div{position: absolute;height: 5%;width: 20%;left: 43%;top:20%;}
+#showMe{display:block;width: 90%; height: 65%; position: absolute; top: 20%;}
+#showMe h1{position: absolute;left: 40%;top: 15%;font-size: 16px;}
+#showMe h2{position: absolute;left: 58%;top: 15%;font-size: 16px;}
+.branch1 {position: absolute;left: 5%;top: 40%;width: 30%;font-size: 14px;font-weight: bold;height: 50%; text-align: center;}
+.lanes1 {position: absolute;left: 30%;top: 40%;width: 30%;font-size: 14px;font-weight: bold;height: 50%;text-align: center;}
+.profile1 {position: absolute;left: 55%;top: 40%;width: 30%;font-size: 14px;font-weight: bold;height: 50%;text-align: center;}
+.market1 {position: absolute;left: 80%;top: 40%;width: 30%;font-size: 14px;font-weight: bold;height: 50%;text-align: center;}
+#view1, #view2, #view3, #view4{position: absolute;left: 10%;bottom: 50%;}
+#update1,#update2,#update3, #update4{position: absolute;left: 40%;bottom: 50%;}
+#tag1, #tag2, #tag3, #tag4{margin-top: 10px; margin-right: 17%; font-size: 18px;}
+.trans_updation {width: 50%; height: 5%; position: absolute; left: 35%;bottom: 10%;
+                      font-size: 18px;}
+.close1,.close2,.close3,.close4,.close5,.close6 {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  height: 5px;
+  width: 5px;
+  cursor: pointer;
+}
+.modal-content {
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px 25px 25px 25px;
+              border: 1px solid #888;
+              width: 35%;
+              height: 55%;
+              display: -webkit-box;
+              display: -webkit-flex;
+              display: -moz-box;
+              display: -ms-flexbox;
+              display: flex;
+              flex-wrap: wrap;
+                }
+input[type="file"] {margin-left: 60px;}
+</style>
+<div class="maindiv">
+<h1>Transporter Name</h1>
+<form method="post" enctype="multipart/form-data">
+    <div id="Transporter-div">
+<select class="form-control selectpicker" id="trans-dropdown" name="Transporter" data-live-search="true">
+        <option value={{transporter_name[0][0]}} selected>{{transporter_name[0][1]}}</option>
+        {% for row in transporters %}
+        <option value={{row[0]}}>{{row[1]}}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="trans_updation">
+    <p style="font-size: 16px; color: black;"><b> To Create ID for new Transporters: </b>
+    <a href="/unassigned_transporter_{{userid}}" style="color:blue;font-size: 16px;"> Click here! </a></p>
+    </div>
+<div id="showMe">
+    <h1><b>Transporter Name: </b></h1>
+    <h2 id="demo">{{transporter_name[0][1]}}</h2>
+    <div class="branch1">
+        <h3 id="tag1">Branch list</h3>
+        <button id="view1" class="bttn" formaction="/download_branch_{{userid}}">View</button>
+        <a id="update1" class="bttn">Update</a>
+             <div id="myModal1" class="modal">
+                <div class="modal-content">
+                  <span class="close1">&times;</span>
+                <span class="contact100-form-title">Upload Branchlist:</span>
+                <div class="wrap-input100 rs1-wrap-input100" data-validate="Upload Branchlist">
+                  <input type="file" name='myfile' id="file1" class="input100" required/>
+                  <span class="hover-input100"></span></div>
+                <div class="container-contact100-form-btn">
+                  <button id="submit1" class="contact100-form-btn" formaction="/convert">Submit</button>
+                </div>
+                </div>
+              </div>
+        </div>
+        <div class="lanes1">
+        <h4 id="tag2">Lane data</h4>
+        <button id="view2" class="bttn" formaction="/download_lanes_{{userid}}">View</button>
+        <a id="update2" class="bttn">Update</a>
+                <div id="myModal2" class="modal">
+                <div class="modal-content">
+                  <span class="close2">&times;</span>
+                <span class="contact100-form-title">Upload Lane data:</span>
+                <div class="wrap-input100 rs1-wrap-input100" data-validate="Upload lanes">
+                <input type="file" name='myfile1' id="file2" class="input100" required/>
+                <span class="hover-input100"></span></div>
+                <label class="label-input100">Volume Unit:</label>
+                <div class="wrap-input100 rs1-wrap-input100" data-validate="enter volumeUnit">              
+                      <input type="radio" name="unit" value="Truck Load" checked> Truck Load
+                      <input type="radio" name="unit" value="Per MT"> In MT
+                      <input type="radio" name="unit" value="Cubic Feet"> Cubic Feet
+                      <span class="hover-input100"></span>
+                    </div>
+              <div class="container-contact100-form-btn">
+                  <button id="submit2" class="contact100-form-btn" formaction="/convert">Submit</button>
+                </div>
+                </div>
+              </div>
+        </div>
+        <div class="profile1">
+        <h5 id="tag3">Transporter profile</h5>
+        <button id="view3" class="bttn" formaction="/download_profile_{{userid}}">View</button>
+        <a id="update3" class="bttn">Update</a>
+                <div id="myModal3" class="modal">
+                <div class="modal-content">
+                  <span class="close3">&times;</span>
+                  <span class="contact100-form-title">Upload Transporter Profile:</span>
+                  <div class="wrap-input100 rs1-wrap-input100" data-validate="Upload prifle">
+                <input type="file" name="profile" id="file3" class="input100" required>
+                <span class="hover-input100"></span></div>
+                <div class="container-contact100-form-btn">
+                  <button id="submit3" class="contact100-form-btn" formaction="/convert">Submit</button>
+                </div>
+                </div>
+              </div>
+        </div>
+        <div class="market1">
+            <h6 id="tag4">Market Intelligence</h6>
+            <button id="view4" class="bttn" formaction="/download_intelligence_{{userid}}">View</button>
+            <a id="update4" class="bttn">Update</a>
+                    <div id="myModal4" class="modal">
+                    <div class="modal-content" style="height: 65%;">
+                      <span class="close4">&times;</span>
+                    
+                      <span class="contact100-form-title">Market Intelligence:</span>
+                      <div class="wrap-input100 rs1-wrap-input100" data-validate="Upload MI">
+                    <textarea rows="6" cols="40" type="text" name="intelligence" id="intelligence" class="input100" required>
+                    </textarea>
+                    <span class="hover-input100"></span></div>
+                  </br></br>
+                    <div class="container-contact100-form-btn">
+                      <button id="submit4" class="contact100-form-btn" formaction="/convert">Submit</button>
+                    </div>
+                    </div>
+                  </div>
+            </div> 
+    </div>  
+    </div> 
+    </form>
+<script>
+    var elem = document.getElementById("trans-dropdown");
+    elem.onchange = function(){
+        var x = elem.selectedIndex;
+        var y = elem.options;
+        var z = y[x].text;
+        if (z != "Other") {
+            var hiddenDiv = document.getElementById("showMe");
+             hiddenDiv.style.display = (this.value == "") ? "none":"block";
+             document.getElementById("demo").innerHTML = z;
+             var Div = document.getElementById("second");
+             Div.style.display = "none";
+    
+          }
+          else {
+            var hiddenDiv = document.getElementById("showMe");
+             hiddenDiv.style.display = "none";
+             var Div = document.getElementById("second");
+             Div.style.display = (this.value == "") ? "none":"block";
+             document.getElementById("demo1").innerHTML = z;
+            }
+    };
+    </script>  
+    <script>
+            // When the user scrolls the page, execute myFunction 
+            window.onscroll = function() {myFunction()};
+            
+            function myFunction() {
+              var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+              var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+              var scrolled = (winScroll / height) * 100;
+              document.getElementById("myBar").style.width = scrolled + "%";
+            }
+            </script>
+    <script>
+        function popup_funtion(popup_div,button,close, input1, input2, input3, input4) {
+            var modal = document.getElementById(popup_div);
+            
+            // Get the button that opens the modal
+            var btn = document.getElementById(button);
+            
+            // Get the <span> element that closes the modal
+            var span1 = document.getElementsByClassName(close)[0];
+            
+            // When the user clicks the button, open the modal
+            btn.onclick = function() {
+              modal.style.display = "block";
+              $(input2).removeAttr('required');
+               $(input3).removeAttr('required');
+               $(input4).removeAttr('required');
+               $(input1).attr('required', 'required');
+            }
+            
+            // When the user clicks on <span> (x), close the modal
+            span1.onclick = function() {
+              modal.style.display = "none";
+            }
+        };
+        popup_funtion("myModal1","update1","close1",'#file1','#file2','#file3','#intelligence');
+        popup_funtion("myModal2","update2","close2",'#file2','#file1','#file3','#intelligence');
+        popup_funtion("myModal3","update3","close3",'#file3','#file2','#file1','#intelligence');
+        popup_funtion("myModal4","update4","close4",'#intelligence','#file3','#file2','#file1');
+    
+        function block_funtion(button) {
+          var btn = document.getElementById(button);
+          btn.onclick = function() {
+              $('#file1').removeAttr('required');
+               $('#file2').removeAttr('required');
+               $('#file3').removeAttr('required');
+               $('#intelligence').removeAttr('required');
+            };
+        };
+        block_funtion('view1');
+        block_funtion('view2');
+        block_funtion('view3');
+        block_funtion("view4");
+        </script>
+ <script type="text/javascript" src="https://code.jquery.com/jquery-1.8.2.js"></script>
+ <style type="text/css">
+ #overlay {
+ position: fixed;
+ top: 0; left: 0; width: 100%; height: 100%;
+ background-color: #000;
+ -moz-opacity:0.9;
+ -khtml-opacity: 0.7;opacity: 0.7; z-index: 100;display: none;}
+ .cnt223 a{text-decoration: none;}
+ .popup{
+ width: 100%; margin: 0 auto;
+ display: none; position: fixed; z-index: 101;}
+ .cnt223{
+ min-width: 25%; width: 25%;
+ min-height: 30%; margin: 20% auto;
+ background: #ffffff; position: relative;
+ z-index: 103; padding: 30px 10px;
+ border-radius: 5px; box-shadow: 0 2px 5px #000;
+ text-align: center;}
+ .cnt223 p{
+ clear: both; color: #555555;font-size: 18px;font-family: sans-serif;}
+ .cnt223 a{
+ color: #d91900;font-weight: bold;position: absolute;right:2%;top:0.5%;
+ font-size: 18px;opacity: 0.8;}
+ 
+ .cnt223 h1{font-size: 14px;font-weight: bold;}
+ </style>
+ <script type='text/javascript'>
+     var ar = {{popup|safe}};
+     $(function(){
+     document.getElementById("error").innerHTML = String(ar);
+     var overlay = $('<div id="overlay"></div>');
+     overlay.show();
+     overlay.appendTo(document.body);
+     $('.popup').show();
+     $('.close').click(function(){
+     $('.popup').hide();
+     overlay.appendTo(document.body).remove();
+     return false;
+     });
+     $('.x').click(function(){
+     $('.popup').hide();
+     overlay.appendTo(document.body).remove();
+     return false;
+     });
+     });
+     </script>
+ <div class='popup'>
+     <div class='cnt223'>
+     <a href='' class='close'>X</a>
+     <b><p id="error"></p></b>
+     </div></div>
+</body>
+</html>

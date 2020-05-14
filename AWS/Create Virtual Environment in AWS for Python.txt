@@ -1,0 +1,17 @@
+1. change directory where you have requirements.txt file
+	cd folder
+
+2. Make Directory
+	mkdir python-package
+
+3. Install the dependancies to python folder 
+	pip install -r requirements.txt -t python
+
+4. Zip the python folder
+5. Go to layers & create layer
+6. Upload zip file to lambda layer
+7. Select the runtime (python 3.6, 3.7)
+8. Click on layer in lambda function
+9. Add a layer
+10. You can add any layer
+11. add Python36-SciPy1x layer
