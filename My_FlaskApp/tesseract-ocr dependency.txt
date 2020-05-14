@@ -1,9 +1,0 @@
-1. Download the tesseract-ocr:
-https://github.com/UB-Mannheim/tesseract/wiki
-
-2. Install it.
-3. go to the directory:
-C:\Users\SnehaD\AppData\Local\Tesseract-OCR
-
-4. add tesseract_cmd to the python file.
-pytesseract.pytesseract.tesseract_cmd = r"C:\Users\SnehaD\AppData\Local\Tesseract-OCR\tesseract.exe"

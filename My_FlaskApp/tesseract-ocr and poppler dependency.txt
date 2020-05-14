@@ -1,0 +1,23 @@
+
+################## tesseract-ocr dependency ##########################
+1. Download the tesseract-ocr:
+https://github.com/UB-Mannheim/tesseract/wiki
+
+2. Install it.
+3. go to the directory:
+C:\Users\SnehaD\AppData\Local\Tesseract-OCR
+
+4. add tesseract_cmd to the python file.
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\SnehaD\AppData\Local\Tesseract-OCR\tesseract.exe"
+
+
+################ poppler dependency ################################
+1. Download poppler:
+http://blog.alivate.com.au/poppler-windows/
+
+2. Extract it.
+3. move this folder to users.
+4. add the path to windows environment:
+https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/
+5. Add path of bin to poppler_path:
+pages = convert_from_path(fileurl, poppler_path=r'C:\Users\SnehaD\poppler-0.68.0\bin')
