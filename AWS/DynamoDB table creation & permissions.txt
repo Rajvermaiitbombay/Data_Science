@@ -1,0 +1,12 @@
+1. Create table in dynamoDB
+2. add primary key & set the read and write throughput (total capacity units of all tables upto 25 is free)
+3. Copy the Amazon Resource Name (ARN) to add permission from IAM
+4. Go to IAM and create role
+create role -> select lambda -> next: permissions -> select AWSLambdaBasicExecutionRole, AWSLambdaDynamoDBExecutionRole -> next: Tags -> next: review
+-> enter Rolename -> create role
+5. Open created role and click on add inline policy
+6. Select the service (DynamoDB)
+7. add the actions (Getitems, Putitems, Deleteitems, Scan)
+8. In Resources, Add ARN which was copied from dynamoDB table
+9. Click on review policy
+10. Enter the Name of policy & click on create policy
