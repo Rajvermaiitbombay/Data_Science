@@ -7,18 +7,6 @@ Created on Sun May 17 17:44:17 2020
 import json
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
-#from jwt_rsa.token import JWT
-#from jwt_rsa.rsa import generate_rsa
-
-#def jwt_decoder(token):
-#    try:
-#        bits = 2048
-#        private_key, public_key = generate_rsa(bits)
-#        jwt = JWT(private_key, public_key)
-#        result = jwt.decode(token, verify=False)
-#        return result
-#    except Exception as e: 
-#        return e
 
 def lambda_handler(event, context):
     table_name = event['table_name']

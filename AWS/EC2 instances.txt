@@ -1,0 +1,19 @@
+########### steps to create EC2 Instance for windows #####################
+1. Click on instances -> click on launch instances
+2. search windows in amazon machine image filter 
+3. Step 1: Select windows which is free for tier account (microsoft windows server 2019)
+4. Step 2: Choose instance type -> Select t2.micro type which is free for tier account
+5. Step 3: Configure Instance Details -> all default values remain same -> paste sricpt into user-data textarea
+6. Step 4: Add Storage -> set default values
+7. Step 5: Add Tags -> click on add tag -> enter name & value
+8. Step 6: Configure Security Group -> enter Security group name -> enter Description -> select source from where
+   you can access the RDP -> add rules -> select HTTP -> select source
+9. Step 7: Review Instance Launch -> click on launch
+10.Create new key-pair which is used to generate password (can download key pair onlyy once) -> launch
+11.View instances
+12. Can edit security groups -> click on security groups -> actions -> choose edit inbound rules -> add rules
+13. To generate password -> right click to instance -> get windows password -> choose key-pair file -> decrypt the password
+14. username: Administrator password: *S3UaBacLlpQo%!!DFDZuQSau(6JRsW2
+15. copy the DNS address
+16. open remote desktop connection from start -> paste the DNS address
+17. You can download RDP file from connect
