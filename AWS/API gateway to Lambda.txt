@@ -1,0 +1,10 @@
+########## Steps to deploy lambda function as rest api ##############################
+
+1. Go to the API Gateway
+2. Go to the APIs section -> select rest api -> click on build
+3. choose create new api -> enter api name -> click on create api
+4. Click on Action dropdown -> select create resource -> enetr resource name -> click on create resource
+5. Click on Action dropdown -> select create method -> select method from dropdown -> choose Integration type: lambda func
+   -> select your lambda function -> choose the region -> click on save button
+6. Click on Action dropdown -> select deploy API -> select Deployment stage -> click on deploy
+7. Click on API name -> copy invoke url
