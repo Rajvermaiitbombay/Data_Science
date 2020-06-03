@@ -1,0 +1,10 @@
+Download from https://dev.mysql.com/downloads/
+
+===========Steps to install the mysql ====================================
+
+1. choosing the setup type - developer default
+2. Check requirements
+3. Installation- make sure all products are there in the list
+4. product configuration-> next -> standalone mysql server -> next -> leave as it is
+   -> next -> set the password -> add user -> next -> leave default -> next -> excecute
+5. connect to the server -> enter username & password

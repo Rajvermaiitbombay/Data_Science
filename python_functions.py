@@ -35,6 +35,8 @@ resultant = df.merge(df1, left_on="company_id", right_on="company_id", how='oute
 resultant = df.join(df1, how='left')
 
 ''' Concatenation '''
+df3 = pd.DataFrame()
+df2 = pd.DataFrame()
 df_cat1 = pd.concat([df1, df2, df3], axis=0)
 df_cat1 = pd.concat([df1, df2, df3], axis=1)
 
@@ -148,16 +150,4 @@ def check_prime(n):
         else:
             pass
     return 'Prime'
-# check_prime(9)
-
-
-
-
-
-
-
-
-
-
-
-
+# check_prime(9) 
